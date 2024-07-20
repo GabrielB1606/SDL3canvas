@@ -4,3 +4,4 @@ project(SDL3canvasTEST)
 
 add_subdirectory(SDL3canvas)
 add_subdirectory(SDL3engine)
+add_subdirectory(vendor/SDL)
