@@ -732,7 +732,7 @@ static void ImGui_ImplSDL3_UpdateGamepads()
     if (bd->WantUpdateGamepadsList && bd->GamepadMode != ImGui_ImplSDL3_GamepadMode_Manual)
     {
         ImGui_ImplSDL3_CloseGamepads();
-        // int sdl_gamepads_count = 0;
+        int sdl_gamepads_count = 0;
         // const SDL_JoystickID* sdl_gamepads = SDL_GetGamepads(&sdl_gamepads_count);
         // for (int n = 0; n < sdl_gamepads_count; n++)
         //     if (SDL_Gamepad* gamepad = SDL_OpenGamepad(sdl_gamepads[n]))
@@ -742,7 +742,7 @@ static void ImGui_ImplSDL3_UpdateGamepads()
         //             break;
         //     }
         // SDL_free(sdl_gamepads);
-        // bd->WantUpdateGamepadsList = false;
+        bd->WantUpdateGamepadsList = false;
     }
 
     // FIXME: Technically feeding gamepad shouldn't depend on this now that they are regular inputs.
