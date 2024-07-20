@@ -5,7 +5,8 @@
             "includePath": [
                 "${default}",
                 "${workspaceFolder}/SDL3canvas",
-                "${workspaceFolder}/vendor/SDL/include"
+                "${workspaceFolder}/vendor/SDL/include",
+                "${workspaceFolder}/vendor/SDL3imgui"
             ],
             "defines": [
                 "_DEBUG",
