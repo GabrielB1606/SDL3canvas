@@ -1,61 +1,3 @@
-// #include "include/defines.hpp"
-// #include "imgui.h"
-
-// SDL_Window* window;
-// SDL_Renderer* renderer;
-
-// int main(int, char**){
-//   if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_EVENTS|SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0){
-//     SDL_Log("SDL failed to init!");
-//     return -1;
-//   }
-
-//   window = SDL_CreateWindow("SDL3 Canvas", 1280, 720, SDL_WINDOW_HIGH_PIXEL_DENSITY|SDL_WINDOW_OPENGL);
-//   renderer = SDL_CreateRenderer(window, NULL);
-//   SDL_SetRenderVSync(renderer, 1);
-//   bool running = 1;
-  
-//   std::vector<FCircle> pts;
-
-//   FCircle circ(200, 200, 100);
-
-//   IMGUI_CHECKVERSION();
-//   ImGui::CreateContext();
-//   ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-//   while(running){
-//     SDL_Event event;
-//     if(SDL_PollEvent(&event) > 0)
-//       switch (event.type){
-//         case SDL_EVENT_QUIT:
-//           running = false;
-//           break;
-//         case SDL_EVENT_MOUSE_BUTTON_DOWN:
-//           pts.push_back( FCircle(event.motion.x, event.motion.y, 3) );
-//           break;
-        
-//         default:
-//           break;
-//       }
-//     SDL_SetRenderDrawColor(renderer, 69, 69, 69, 0xff);
-//     SDL_RenderClear(renderer);
-//     SDL_SetRenderDrawColor(renderer, 0, 0xff, 0, 0xff);
-//     SDL_SetRenderScale(renderer, 1, 1);
-    
-//     for(const auto &c:pts)
-//       c.render(renderer);
-
-//     SDL_RenderPresent(renderer);
-//     SDL_Delay(1);
-//   }
-
-//   SDL_DestroyRenderer(renderer);
-//   SDL_DestroyWindow(window);
-//   SDL_Quit();
-
-//   return 0;
-// }
-
 // Dear ImGui: standalone example application for SDL3 + SDL_Renderer
 // (SDL is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
 
@@ -73,6 +15,8 @@
 #include "imgui_impl_sdlrenderer3.h"
 #include <stdio.h>
 #include <SDL3/SDL.h>
+#include "include/defines.hpp"
+#include "vector"
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <SDL3/SDL_opengles2.h>
 #else
@@ -111,8 +55,11 @@ int main(int, char**)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
+    // io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;
+    // io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+    // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable viewports
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -143,6 +90,7 @@ int main(int, char**)
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    std::vector<FCircle> pts;
 
     // Main loop
     bool done = false;
@@ -154,7 +102,7 @@ int main(int, char**)
 #else
     while (!done)
 #endif
-    {
+    {   
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
         // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
@@ -168,6 +116,9 @@ int main(int, char**)
                 done = true;
             if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
+            if(event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+                if(!io.WantCaptureMouse)
+                    pts.push_back( FCircle(event.motion.x, event.motion.y, 3) );
         }
 
         // Start the Dear ImGui frame
@@ -214,9 +165,15 @@ int main(int, char**)
 
         // Rendering
         ImGui::Render();
-        //SDL_RenderSetScale(renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+        // SDL_RenderSetScale(renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+        // ImGui::UpdatePlatformWindows();
+        // ImGui::RenderPlatformWindowsDefault();
         SDL_SetRenderDrawColorFloat(renderer, clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 0, 0xff, 0, 0xff);
+        SDL_SetRenderScale(renderer, 1, 1);
+        for(const auto &c:pts)
+            c.render(renderer);
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
         SDL_RenderPresent(renderer);
     }
