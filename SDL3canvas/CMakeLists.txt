@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5.0)
 project(SDL3canvas VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 17)
+# set(SOURCES_IMGUI SDL3imgui/imconfig.h SDL3imgui/imgui.h SDL3imgui/imgui_impl_sdl3.h SDL3imgui/imgui_impl_sdlrenderer3.h SDL3imgui/imgui_internal.h SDL3imgui/imstb_rectpack.h SDL3imgui/imstb_textedit.h SDL3imgui/imstb_truetype.h SDL3imgui/imgui_draw.cpp SDL3imgui/imgui_impl_sdl3.cpp SDL3imgui/imgui_impl_sdlrenderer3.cpp SDL3imgui/imgui_tables.cpp SDL3imgui/imgui_widgets.cpp SDL3imgui/imgui.cpp)
 set(SOURCES include/defines.hpp src/base.cpp)
 add_library(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/)

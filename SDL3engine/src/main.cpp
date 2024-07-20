@@ -38,7 +38,7 @@ int main(int, char**){
     
     for(const auto &c:pts)
       c.render(renderer);
-      
+
     SDL_RenderPresent(renderer);
     SDL_Delay(1);
   }
