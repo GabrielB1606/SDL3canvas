@@ -3,15 +3,17 @@
 #include <SDL3/SDL.h>
 
 SDL_Window* window;
+SDL_Renderer* renderer;
 
 int main(int, char**){
 
-  if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_EVENTS|SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_GAMEPAD) != 0){
+  if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_EVENTS|SDL_INIT_VIDEO) != 0){
     SDL_Log("SDL failed to init!");
-    return -2;
+    return -1;
   }
 
-  window = SDL_CreateWindow("SDL3 Canvas", 1280, 720, 0);
+  window = SDL_CreateWindow("SDL3 Canvas", 600, 600, 0);
+  renderer = SDL_CreateRenderer(window, NULL);
   bool running = 1;
   
   while(running){
@@ -25,8 +27,13 @@ int main(int, char**){
         default:
           break;
       }
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0xff, 0xff);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+    SDL_Delay(1);
   }
 
+  SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
   SDL_Quit();
 
