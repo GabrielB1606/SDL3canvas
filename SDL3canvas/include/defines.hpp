@@ -4,6 +4,7 @@
 #include <vector>
 #include <array>
 #include <SDL3/SDL.h>
+#include "imgui.h"
 
 struct FCircle{
 
@@ -123,5 +124,9 @@ template <typename T> struct Quadtree{
   }
 
 };
+
+void drawCanvas(SDL_Renderer* renderer);
+void pollEvent(SDL_Event event);
+void drawGui(ImGuiIO io);
 
 #endif
