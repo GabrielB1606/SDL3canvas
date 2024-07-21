@@ -17,7 +17,7 @@ struct FCircle{
     this->cy = cy;
     this->r = r;
 
-    for (float i = -r; i <= r; i += 0.125){
+    for (float i = -r; i <= r; i += 0.0125){
       float x = SDL_sqrt(r * r - i * i);
       points.push_back(SDL_FPoint{cx - x, cy + i});
       points.push_back(SDL_FPoint{cx + x, cy + i});
