@@ -71,6 +71,23 @@ template <typename T> struct Quadtree{
       pt.y <= boundaries[1].y; 
   }
 
+  bool intersects(Point<T> aa, Point<T> bb){
+    return !(
+      boundaries[0].x > bb.x ||
+      boundaries[1].x < aa.x ||
+      boundaries[0].y > bb.y ||
+      boundaries[1].y < aa.y
+    );
+  }
+
+  bool isContained(Point<T> aa, Point<T> bb){
+    return
+      boundaries[0].x >= aa.x &&
+      boundaries[1].x <= bb.x &&
+      boundaries[0].y >= aa.y &&
+      boundaries[1].y <= bb.y;
+  }
+
   bool insert(Point<T> value){
 
     if(!contains(value))
@@ -121,6 +138,51 @@ template <typename T> struct Quadtree{
       children[i].insert(value);
 
     return true;
+
+  }
+
+  std::vector<Point<T>> getPoints(){
+
+    std::vector<Point<T>> ans;
+
+    if(children.size()){
+      for (int i = 0; i < children.size(); i++){
+        std::vector<Point<T>> q = children[i].getPoints();
+        for(const auto &item:q)
+          ans.push_back(item);
+      }
+    }else{
+      for(int i = 0; i<data.size(); ++i)
+        ans.push_back(data[i]);
+    }
+    
+    return ans;
+
+  }
+
+  std::vector<Point<T>> query(Point<T> aa, Point<T> bb){
+
+    if(this->isContained(aa, bb))
+      return getPoints();
+    
+    if(!this->intersects(aa, bb))
+      return {};
+
+    std::vector<Point<T>> ans;
+
+    if(children.size()){
+      for (int i = 0; i < children.size(); i++){
+        std::vector<Point<T>> q = children[i].query(aa, bb);
+        for(const auto &item:q)
+          ans.push_back(item);
+      }
+    }else{
+      for(int i = 0; i<data.size(); ++i)
+        if( aa.x < data[i].x && aa.y < data[i].y && bb.x > data[i].x && bb.y > data[i].y )
+          ans.push_back(data[i]);
+    }
+    
+    return ans;
 
   }
 

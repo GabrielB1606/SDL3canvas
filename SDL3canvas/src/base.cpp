@@ -6,6 +6,8 @@ ImVec4 pointColor = ImVec4(0, 1, 0, 1.00f);
 ImVec4 treeColor = ImVec4(0, 1, 0, 1.00f);
 float pointSize = 3;
 bool hideGui = false;
+bool showQuadtree = true;
+bool showPoints = true;
 
 std::vector<FCircle> pts;
 Quadtree<float> qt({0, 0}, {1280, 720});
@@ -13,11 +15,23 @@ Quadtree<float> qt({0, 0}, {1280, 720});
 void drawCanvas(SDL_Renderer* renderer){
   SDL_SetRenderDrawColorFloat(renderer, clear_color.x, clear_color.y, clear_color.z, clear_color.w);
   SDL_RenderClear(renderer);
+  
   SDL_SetRenderDrawColorFloat(renderer, pointColor.x, pointColor.y, pointColor.z, pointColor.w);
-  for(const auto &c:pts)
-    c.render(renderer);
+  if(showPoints)
+    for(const auto &c:pts)
+      c.render(renderer);
+  
   SDL_SetRenderDrawColorFloat(renderer, treeColor.x, treeColor.y, treeColor.z, treeColor.w);
-  qt.render(renderer);
+  if(showQuadtree)
+    qt.render(renderer);
+  
+  SDL_SetRenderDrawColorFloat(renderer, 1, 0, 0, 1);
+  SDL_FRect r = {0, 0, 500, 500};
+  SDL_RenderRect(renderer, &r);
+  std::vector<Point<float>> q = qt.query({0, 0}, {500, 500});
+  for(const auto &c:q)
+    FCircle{c.x, c.y, pointSize}.render(renderer);
+
 }
 
 void pollEvent(SDL_Event event, ImGuiIO io){
@@ -49,11 +63,13 @@ void drawGui(ImGuiIO io){
 
   ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
   ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+  ImGui::Checkbox("Show points", &showPoints);
+  ImGui::Checkbox("Show quadtree", &showQuadtree);
 
   // ImGui::SliderFloat("point size", &pointSize, 1.0f, 10.0f);
-  ImGui::ColorEdit3("point color", (float*)&pointColor); // Edit 3 floats representing a color
-  ImGui::ColorEdit3("tree color", (float*)&treeColor); // Edit 3 floats representing a color
-  ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+  ImGui::ColorEdit3("Point color", (float*)&pointColor); // Edit 3 floats representing a color
+  ImGui::ColorEdit3("Tree color", (float*)&treeColor); // Edit 3 floats representing a color
+  ImGui::ColorEdit3("Clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
   if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
     counter++;
