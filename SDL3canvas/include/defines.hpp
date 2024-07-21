@@ -74,7 +74,7 @@ template <typename T> struct Quadtree{
     if(!contains(value))
       return false;
     
-    if(data.size() < capacity){
+    if(!children.size() && data.size() < capacity){
       data.push_back(value);
       return true;
     }
@@ -108,6 +108,11 @@ template <typename T> struct Quadtree{
         this->capacity
       ) );
 
+      for (size_t i = 0; i < data.size(); i++)
+        for(size_t j = 0; j<children.size(); ++j)
+          children[j].insert(data[i]);
+      
+      data.clear();
     }
 
     for (size_t i = 0; i < capacity; i++)
