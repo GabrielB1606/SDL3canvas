@@ -61,18 +61,13 @@ int main(int, char**){
     ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
     ImGui_ImplSDLRenderer3_Init(renderer);
 
-    // Our state
-    bool show_demo_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
     // Main loop
     bool done = false;
     while (!done){   
         SDL_Event event;
         while (SDL_PollEvent(&event)){
             ImGui_ImplSDL3_ProcessEvent(&event);
-            if(!io.WantCaptureMouse)
-                pollEvent(event);
+            pollEvent(event, io);
             if (event.type == SDL_EVENT_QUIT)
                 done = true;
             if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))

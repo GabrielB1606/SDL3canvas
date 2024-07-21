@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <array>
+#include <iostream>
 #include <SDL3/SDL.h>
 #include "imgui.h"
 
@@ -126,7 +127,7 @@ template <typename T> struct Quadtree{
 };
 
 void drawCanvas(SDL_Renderer* renderer);
-void pollEvent(SDL_Event event);
+void pollEvent(SDL_Event event, ImGuiIO io);
 void drawGui(ImGuiIO io);
 
 #endif
