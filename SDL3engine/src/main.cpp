@@ -91,6 +91,7 @@ int main(int, char**)
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     std::vector<FCircle> pts;
+    Quadtree<float> qt({0, 0}, {1280, 720});
 
     // Main loop
     bool done = false;
@@ -117,8 +118,10 @@ int main(int, char**)
             if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
             if(event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
-                if(!io.WantCaptureMouse)
+                if(!io.WantCaptureMouse){
                     pts.push_back( FCircle(event.motion.x, event.motion.y, 3) );
+                    qt.insert({event.motion.x, event.motion.y});
+                }
         }
 
         // Start the Dear ImGui frame
@@ -174,6 +177,7 @@ int main(int, char**)
         SDL_SetRenderScale(renderer, 1, 1);
         for(const auto &c:pts)
             c.render(renderer);
+        qt.render(renderer);
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
         SDL_RenderPresent(renderer);
     }
