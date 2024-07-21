@@ -80,7 +80,7 @@ int main(int, char**){
         ImGui::NewFrame();
 
         // Rendering
-        drawGui(io);
+        drawGui(renderer, io);
         ImGui::Render();
 
         drawCanvas(renderer);

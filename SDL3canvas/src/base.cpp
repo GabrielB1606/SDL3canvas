@@ -10,6 +10,7 @@ bool showQuadtree = true;
 bool showPoints = true;
 Point<float> queryLocation = {100,100};
 float querySize = 100;
+bool showQuery = false;
 
 std::vector<FCircle> pts;
 Quadtree<float> qt({0, 0}, {1280, 720});
@@ -27,16 +28,18 @@ void drawCanvas(SDL_Renderer* renderer){
   if(showQuadtree)
     qt.render(renderer);
   
-  SDL_SetRenderDrawColorFloat(renderer, 1, 0, 0, 1);
-  float qs2 = querySize/2;
-  SDL_FRect r = {queryLocation.x-qs2, queryLocation.y-qs2, querySize, querySize};
-  SDL_RenderRect(renderer, &r);
-  std::vector<Point<float>> q = qt.query(
-    {queryLocation.x-qs2, queryLocation.y-qs2},
-    {queryLocation.x+qs2, queryLocation.y+qs2}
-  );
-  for(const auto &c:q)
-    FCircle{c.x, c.y, pointSize}.render(renderer);
+  if(showQuery){
+    SDL_SetRenderDrawColorFloat(renderer, 1, 0, 0, 1);
+    float qs2 = querySize/2;
+    SDL_FRect r = {queryLocation.x-qs2, queryLocation.y-qs2, querySize, querySize};
+    SDL_RenderRect(renderer, &r);
+    std::vector<Point<float>> q = qt.query(
+      {queryLocation.x-qs2, queryLocation.y-qs2},
+      {queryLocation.x+qs2, queryLocation.y+qs2}
+    );
+    for(const auto &c:q)
+      FCircle{c.x, c.y, pointSize}.render(renderer);
+  }
 
 }
 
@@ -61,7 +64,7 @@ void pollEvent(SDL_Event event, ImGuiIO io){
   }
 }
 
-void drawGui(ImGuiIO io){
+void drawGui(SDL_Renderer* renderer, ImGuiIO io){
   static float f = 0.0f;
   static int counter = 0;
 
@@ -71,12 +74,16 @@ void drawGui(ImGuiIO io){
   if(hideGui)
     return;
 
-  ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+  ImGui::Begin("Settings");
 
-  ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-  ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+  if (ImGui::Button("Screenshot"))
+    takeScreenshot(renderer, "screenshot.bmp");
+
+  // ImGui::Checkbox("Demo Window", &show_demo_window);
   ImGui::Checkbox("Show points", &showPoints);
   ImGui::Checkbox("Show quadtree", &showQuadtree);
+  ImGui::Checkbox("Show query", &showQuery);
 
   // ImGui::SliderFloat("point size", &pointSize, 1.0f, 10.0f);
   ImGui::SliderFloat("query size", &querySize, 100.0f, 600.0f);
@@ -84,11 +91,6 @@ void drawGui(ImGuiIO io){
   ImGui::ColorEdit3("Tree color", (float*)&treeColor); // Edit 3 floats representing a color
   ImGui::ColorEdit3("Clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-  if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-    counter++;
-  ImGui::SameLine();
-  ImGui::Text("counter = %d", counter);
 
-  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
   ImGui::End();
 }

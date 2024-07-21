@@ -188,8 +188,10 @@ template <typename T> struct Quadtree{
 
 };
 
+void takeScreenshot(SDL_Renderer* renderer, const char *filename);
+
 void drawCanvas(SDL_Renderer* renderer);
 void pollEvent(SDL_Event event, ImGuiIO io);
-void drawGui(ImGuiIO io);
+void drawGui(SDL_Renderer* renderer, ImGuiIO io);
 
 #endif
