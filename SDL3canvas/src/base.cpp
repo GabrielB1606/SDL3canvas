@@ -8,6 +8,8 @@ float pointSize = 3;
 bool hideGui = false;
 bool showQuadtree = true;
 bool showPoints = true;
+Point<float> queryLocation = {100,100};
+float querySize = 100;
 
 std::vector<FCircle> pts;
 Quadtree<float> qt({0, 0}, {1280, 720});
@@ -26,9 +28,13 @@ void drawCanvas(SDL_Renderer* renderer){
     qt.render(renderer);
   
   SDL_SetRenderDrawColorFloat(renderer, 1, 0, 0, 1);
-  SDL_FRect r = {0, 0, 500, 500};
+  float qs2 = querySize/2;
+  SDL_FRect r = {queryLocation.x-qs2, queryLocation.y-qs2, querySize, querySize};
   SDL_RenderRect(renderer, &r);
-  std::vector<Point<float>> q = qt.query({0, 0}, {500, 500});
+  std::vector<Point<float>> q = qt.query(
+    {queryLocation.x-qs2, queryLocation.y-qs2},
+    {queryLocation.x+qs2, queryLocation.y+qs2}
+  );
   for(const auto &c:q)
     FCircle{c.x, c.y, pointSize}.render(renderer);
 
@@ -39,13 +45,19 @@ void pollEvent(SDL_Event event, ImGuiIO io){
     if( event.key.key == SDLK_H ){
       hideGui = !hideGui;
     }
-
+  
   if(io.WantCaptureKeyboard || io.WantCaptureMouse)
     return;
 
   if(event.type == SDL_EVENT_MOUSE_BUTTON_DOWN){
-    pts.push_back( FCircle(event.motion.x, event.motion.y, pointSize) );
-    qt.insert({event.motion.x, event.motion.y});
+    if(event.button.button == SDL_BUTTON_LEFT){
+      pts.push_back( FCircle(event.motion.x, event.motion.y, pointSize) );
+      qt.insert({event.motion.x, event.motion.y});
+    }
+    if(event.button.button == SDL_BUTTON_RIGHT){
+      queryLocation.x = event.motion.x;
+      queryLocation.y = event.motion.y;
+    }
   }
 }
 
@@ -67,6 +79,7 @@ void drawGui(ImGuiIO io){
   ImGui::Checkbox("Show quadtree", &showQuadtree);
 
   // ImGui::SliderFloat("point size", &pointSize, 1.0f, 10.0f);
+  ImGui::SliderFloat("query size", &querySize, 100.0f, 600.0f);
   ImGui::ColorEdit3("Point color", (float*)&pointColor); // Edit 3 floats representing a color
   ImGui::ColorEdit3("Tree color", (float*)&treeColor); // Edit 3 floats representing a color
   ImGui::ColorEdit3("Clear color", (float*)&clear_color); // Edit 3 floats representing a color
