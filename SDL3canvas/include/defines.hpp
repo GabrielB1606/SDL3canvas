@@ -17,17 +17,20 @@ struct FCircle{
     this->cy = cy;
     this->r = r;
 
-    for (float i = -r; i <= r; i += 0.5){
+    for (float i = -r; i <= r; i += 0.125){
       float x = SDL_sqrt(r * r - i * i);
       points.push_back(SDL_FPoint{cx - x, cy + i});
       points.push_back(SDL_FPoint{cx + x, cy + i});
     }
   }
 
-  void render(SDL_Renderer *renderer) const {
+  void render(SDL_Renderer *renderer, bool fill = true) const {
     if (!renderer)
       return;
-    SDL_RenderLines(renderer, points.data(), points.size());
+    if(fill)
+      SDL_RenderLines(renderer, points.data(), points.size());
+    else
+      SDL_RenderPoints(renderer, points.data(), points.size());
   }
 };
 
@@ -184,6 +187,38 @@ template <typename T> struct Quadtree{
     
     return ans;
 
+  }
+
+  bool isContainedInCircle(Point<T> c, T r){
+    T d0 = (boundaries[0].x - c.x)*(boundaries[0].x - c.x) + (boundaries[0].y - c.y)*(boundaries[0].y - c.y);
+    T d1 = (boundaries[1].x - c.x)*(boundaries[1].x - c.x) + (boundaries[1].y - c.y)*(boundaries[1].y - c.y);
+    T rr = r*r;
+    return d0<rr && d1<rr;
+  }
+
+  std::vector<Point<T>> circleQuery(Point<T> c, T r){
+    if(this->isContainedInCircle(c, r))
+      return getPoints();
+    
+    if(!this->intersects({c.x-r, c.y-r}, {c.x+r, c.y+r}))
+      return {};
+
+    std::vector<Point<T>> ans;
+
+    if(children.size()){
+      for (int i = 0; i < children.size(); i++){
+        std::vector<Point<T>> q = children[i].circleQuery(c, r);
+        for(const auto &item:q)
+          ans.push_back(item);
+      }
+    }else{
+      T rr = r*r;
+      for(int i = 0; i<data.size(); ++i)
+        if( rr > (data[i].x-c.x)*(data[i].x-c.x) + (data[i].y-c.y)*(data[i].y-c.y))
+          ans.push_back(data[i]);
+    }
+    
+    return ans;
   }
 
 };

@@ -11,6 +11,7 @@ bool showPoints = true;
 Point<float> queryLocation = {100,100};
 float querySize = 100;
 bool showQuery = false;
+bool circleQuery = false;
 
 std::vector<FCircle> pts;
 Quadtree<float> qt({0, 0}, {1280, 720});
@@ -31,12 +32,24 @@ void drawCanvas(SDL_Renderer* renderer){
   if(showQuery){
     SDL_SetRenderDrawColorFloat(renderer, 1, 0, 0, 1);
     float qs2 = querySize/2;
-    SDL_FRect r = {queryLocation.x-qs2, queryLocation.y-qs2, querySize, querySize};
-    SDL_RenderRect(renderer, &r);
-    std::vector<Point<float>> q = qt.query(
-      {queryLocation.x-qs2, queryLocation.y-qs2},
-      {queryLocation.x+qs2, queryLocation.y+qs2}
-    );
+    std::vector<Point<float>> q;
+    if(circleQuery){
+      FCircle reg = FCircle(queryLocation.x, queryLocation.y, qs2);
+      reg.render(renderer, false);
+      q = qt.circleQuery(
+        {queryLocation.x, queryLocation.y},
+        qs2
+      );
+    }else{
+      SDL_FRect reg = {queryLocation.x-qs2, queryLocation.y-qs2, querySize, querySize};
+      SDL_RenderRect(renderer, &reg);
+      q = qt.query(
+        {queryLocation.x-qs2, queryLocation.y-qs2},
+        {queryLocation.x+qs2, queryLocation.y+qs2}
+      );
+
+    }
+
     for(const auto &c:q)
       FCircle{c.x, c.y, pointSize}.render(renderer);
   }
@@ -84,6 +97,7 @@ void drawGui(SDL_Renderer* renderer, ImGuiIO io){
   ImGui::Checkbox("Show points", &showPoints);
   ImGui::Checkbox("Show quadtree", &showQuadtree);
   ImGui::Checkbox("Show query", &showQuery);
+  ImGui::Checkbox("Circle query", &circleQuery);
 
   // ImGui::SliderFloat("point size", &pointSize, 1.0f, 10.0f);
   ImGui::SliderFloat("query size", &querySize, 100.0f, 600.0f);
