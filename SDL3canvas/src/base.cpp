@@ -15,7 +15,7 @@ bool circleQuery = false;
 bool convexHull = false;
 
 std::vector<FCircle> pts;
-Quadtree<float> qt({0, 0}, {1280, 720});
+Quadtree<float> qt({0, 0}, {800, 600});
 
 void drawCanvas(SDL_Renderer* renderer){
   SDL_SetRenderDrawColorFloat(renderer, clear_color.x, clear_color.y, clear_color.z, clear_color.w);
