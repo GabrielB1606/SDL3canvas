@@ -12,6 +12,7 @@ Point<float> queryLocation = {100,100};
 float querySize = 100;
 bool showQuery = false;
 bool circleQuery = false;
+bool convexHull = false;
 
 std::vector<FCircle> pts;
 Quadtree<float> qt({0, 0}, {1280, 720});
@@ -69,6 +70,7 @@ void pollEvent(SDL_Event event, ImGuiIO io){
     if(event.button.button == SDL_BUTTON_LEFT){
       pts.push_back( FCircle(event.motion.x, event.motion.y, pointSize) );
       qt.insert({event.motion.x, event.motion.y});
+      std::sort(pts.begin(), pts.end());
     }
     if(event.button.button == SDL_BUTTON_RIGHT){
       queryLocation.x = event.motion.x;
@@ -98,6 +100,7 @@ void drawGui(SDL_Renderer* renderer, ImGuiIO io){
   ImGui::Checkbox("Show quadtree", &showQuadtree);
   ImGui::Checkbox("Show query", &showQuery);
   ImGui::Checkbox("Circle query", &circleQuery);
+  ImGui::Checkbox("Convex hull", &circleQuery);
 
   // ImGui::SliderFloat("point size", &pointSize, 1.0f, 10.0f);
   ImGui::SliderFloat("query size", &querySize, 100.0f, 600.0f);

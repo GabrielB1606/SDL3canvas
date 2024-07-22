@@ -4,6 +4,7 @@
 #include <vector>
 #include <array>
 #include <iostream>
+#include <algorithm>
 #include <SDL3/SDL.h>
 #include "imgui.h"
 
@@ -22,6 +23,10 @@ struct FCircle{
       points.push_back(SDL_FPoint{cx - x, cy + i});
       points.push_back(SDL_FPoint{cx + x, cy + i});
     }
+  }
+
+  bool operator<(const FCircle &ot) const{
+    return std::make_pair(cx, cy) < std::make_pair(ot.cx, ot.cy);
   }
 
   void render(SDL_Renderer *renderer, bool fill = true) const {
@@ -137,7 +142,7 @@ template <typename T> struct Quadtree{
       data.clear();
     }
 
-    for (size_t i = 0; i < capacity; i++)
+    for (size_t i = 0; i < children.size(); i++)
       children[i].insert(value);
 
     return true;
