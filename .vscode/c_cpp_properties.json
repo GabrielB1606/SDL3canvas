@@ -6,7 +6,8 @@
                 "${default}",
                 "${workspaceFolder}/SDL3canvas",
                 "${workspaceFolder}/vendor/SDL/include",
-                "${workspaceFolder}/vendor/SDL3imgui"
+                "${workspaceFolder}/vendor/SDL3imgui",
+                "${workspaceFolder}/vendor/glm"
             ],
             "defines": [
                 "_DEBUG",

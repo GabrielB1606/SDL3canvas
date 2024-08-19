@@ -23,7 +23,9 @@ void drawCanvas(SDL_Renderer* renderer){
   SDL_SetRenderDrawColorFloat(renderer, clear_color.x, clear_color.y, clear_color.z, clear_color.w);
   SDL_RenderClear(renderer);
   
+  SDL_SetRenderScale(renderer, pointSize, pointSize);
   gc.render(renderer);
+  SDL_SetRenderScale(renderer, 1.f, 1.f);
 
   SDL_SetRenderDrawColorFloat(renderer, pointColor.x, pointColor.y, pointColor.z, pointColor.w);
   if(showPoints)
@@ -106,7 +108,7 @@ void drawGui(SDL_Renderer* renderer, ImGuiIO io){
   ImGui::Checkbox("Circle query", &circleQuery);
   ImGui::Checkbox("Convex hull", &circleQuery);
 
-  // ImGui::SliderFloat("point size", &pointSize, 1.0f, 10.0f);
+  ImGui::SliderFloat("point size", &pointSize, 0.1f, 10.0f);
   ImGui::SliderFloat("query size", &querySize, 100.0f, 600.0f);
   ImGui::ColorEdit3("Point color", (float*)&pointColor); // Edit 3 floats representing a color
   ImGui::ColorEdit3("Tree color", (float*)&treeColor); // Edit 3 floats representing a color

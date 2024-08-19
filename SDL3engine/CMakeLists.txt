@@ -9,7 +9,7 @@ add_executable(SDL3engine src/main.cpp)
 
 include_directories(${CMAKE_SOURCE_DIR}/vendor/SDL3imgui)
 target_include_directories(${PROJECT_NAME} PUBLIC SDL3canvas SDL3::SDL3 SDL3imgui)
-target_link_libraries(${PROJECT_NAME} PUBLIC SDL3canvas SDL3::SDL3 SDL3imgui)
+target_link_libraries(${PROJECT_NAME} PUBLIC SDL3canvas SDL3::SDL3 SDL3imgui glm::glm)
 
 if(WIN32)
 add_custom_command(
