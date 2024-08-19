@@ -3,7 +3,11 @@ project(SDL3engine)
 
 # set(SOURCES_IMGUI SDL3imgui/imconfig.h SDL3imgui/imgui.h SDL3imgui/imgui_impl_sdl3.h SDL3imgui/imgui_impl_sdlrenderer3.h SDL3imgui/imgui_internal.h SDL3imgui/imstb_rectpack.h SDL3imgui/imstb_textedit.h SDL3imgui/imstb_truetype.h SDL3imgui/imgui_draw.cpp SDL3imgui/imgui_impl_sdl3.cpp SDL3imgui/imgui_impl_sdlrenderer3.cpp SDL3imgui/imgui_tables.cpp SDL3imgui/imgui_widgets.cpp SDL3imgui/imgui.cpp)
 
+if(USE_OPENGL)
+add_executable(SDL3engine src/main_opengl.cpp)
+else()
 add_executable(SDL3engine src/main.cpp)
+endif()
 
 # find_package(SDL3imgui REQUIRED PATHS "${CMAKE_BINARY_DIR}/vendor/SDL3imgui")
 
