@@ -17,10 +17,14 @@ bool convexHull = false;
 std::vector<FCircle> pts;
 Quadtree<float> qt({0, 0}, {800, 600});
 
+GeomCircle gc(400, 300, 250);
+
 void drawCanvas(SDL_Renderer* renderer){
   SDL_SetRenderDrawColorFloat(renderer, clear_color.x, clear_color.y, clear_color.z, clear_color.w);
   SDL_RenderClear(renderer);
   
+  gc.render(renderer);
+
   SDL_SetRenderDrawColorFloat(renderer, pointColor.x, pointColor.y, pointColor.z, pointColor.w);
   if(showPoints)
     for(const auto &c:pts)
