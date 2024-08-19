@@ -8,6 +8,9 @@
 #include <SDL3/SDL.h>
 #include "imgui.h"
 
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
+
 struct GeomCircle{
   float cx, cy, r;
 
