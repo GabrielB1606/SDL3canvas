@@ -8,8 +8,8 @@ set(SOURCES_IMGUI_OPENGL imgui_draw.cpp imgui_tables.cpp imgui_widgets.cpp imgui
 
 if(USE_OPENGL)
 add_library(${PROJECT_NAME} ${SOURCES_IMGUI_OPENGL})
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ SDL3::SDL3 GLAD)
-target_link_libraries(${PROJECT_NAME} PUBLIC GLAD SDL3::SDL3)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ SDL3::SDL3)
+target_link_libraries(${PROJECT_NAME} PUBLIC opengl32 SDL3::SDL3)
 else()
 add_library(${PROJECT_NAME} ${SOURCES_IMGUI})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ SDL3::SDL3)

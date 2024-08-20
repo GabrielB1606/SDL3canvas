@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5.0)
 
 project(SDL3canvasTEST)
 
-set(USE_OPENGL OFF)
+set(USE_OPENGL ON)
 
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/glm)
