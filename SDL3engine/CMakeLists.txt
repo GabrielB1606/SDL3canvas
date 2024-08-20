@@ -5,15 +5,18 @@ project(SDL3engine)
 
 if(USE_OPENGL)
 add_executable(SDL3engine src/main_opengl.cpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC GLAD SDL3canvas SDL3::SDL3 SDL3imgui glm::glm)
+target_include_directories(${PROJECT_NAME} PUBLIC GLAD SDL3canvas SDL3::SDL3 SDL3imgui)
+include_directories(${CMAKE_SOURCE_DIR}/vendor/SDL3imgui ${CMAKE_SOURCE_DIR}/vendor/glad/include)
 else()
 add_executable(SDL3engine src/main.cpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC SDL3canvas SDL3::SDL3 SDL3imgui glm::glm)
+target_include_directories(${PROJECT_NAME} PUBLIC SDL3canvas SDL3::SDL3 SDL3imgui)
+include_directories(${CMAKE_SOURCE_DIR}/vendor/SDL3imgui)
 endif()
 
 # find_package(SDL3imgui REQUIRED PATHS "${CMAKE_BINARY_DIR}/vendor/SDL3imgui")
 
-include_directories(${CMAKE_SOURCE_DIR}/vendor/SDL3imgui)
-target_include_directories(${PROJECT_NAME} PUBLIC SDL3canvas SDL3::SDL3 SDL3imgui)
-target_link_libraries(${PROJECT_NAME} PUBLIC SDL3canvas SDL3::SDL3 SDL3imgui glm::glm)
 
 if(WIN32)
 add_custom_command(
