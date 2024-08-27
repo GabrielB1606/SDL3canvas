@@ -61,13 +61,20 @@ int main(int, char**){
     ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
     ImGui_ImplSDLRenderer3_Init(renderer);
 
+    // Setup Canvas
+    initCanvas();
+
     // Main loop
     bool done = false;
     while (!done){   
         SDL_Event event;
         while (SDL_PollEvent(&event)){
             ImGui_ImplSDL3_ProcessEvent(&event);
-            pollEvent(event, io);
+            
+            // User-defined event handeling
+            pollEvent(event, io);   
+
+            // Default events
             if (event.type == SDL_EVENT_QUIT)
                 done = true;
             if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))
@@ -83,17 +90,22 @@ int main(int, char**){
         drawGui(renderer, io);
         ImGui::Render();
 
+        // User-defined render function
         drawCanvas(renderer);
 
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
         SDL_RenderPresent(renderer);
     }
 
-    // Cleanup
+    // User-defined cleanup
+    cleanUpCanvas();
+
+    // ImGui cleanup
     ImGui_ImplSDLRenderer3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
     ImGui::DestroyContext();
 
+    // SDL3 cleanup
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

@@ -15,100 +15,10 @@
 #include <glm/ext/matrix_clip_space.hpp> // glm::perspective
 #include <glm/ext/scalar_constants.hpp> // glm::pi
 
+#include "primitives.hpp"
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
-
-
-struct GeomCircle{
-
-  float cx, cy, r;
-  std::vector<SDL_Vertex> points;
-  std::vector<int> indexes;
-  
-  glm::mat4 helloCamera(float Translate, glm::vec2 const& Rotate){
-    glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 4.0f / 3.0f, 0.1f, 100.f);
-    glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Translate));
-    View = glm::rotate(View, Rotate.y, glm::vec3(-1.0f, 0.0f, 0.0f));
-    View = glm::rotate(View, Rotate.x, glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-    return Projection * View * Model;
-  }
-  
-  GeomCircle(float cx, float cy, float r){
-
-    this->cx = cx;
-    this->cy = cy;
-    this->r = r;
-
-    points.push_back(
-      SDL_Vertex{
-        SDL_FPoint{cx, cy},
-        SDL_FColor{0.0, 1.0, 0.0}
-      }
-    );
-
-    points.push_back(
-      SDL_Vertex{
-        SDL_FPoint{cx, cy-r},
-        SDL_FColor{0.0, 1.0, 0.0}
-      }
-    );
-
-    indexes.push_back(0);
-    indexes.push_back(1);
-    indexes.push_back(2);
-    
-    indexes.push_back(0);
-    indexes.push_back(3);
-    indexes.push_back(1);
-
-    float step = std::max((float)r/100.0, 1.0);
-    for (float i = -r; i <= r; i += step){
-      float x = SDL_sqrt(r * r - i * i);
-      points.push_back(
-        SDL_Vertex{
-          SDL_FPoint{cx-x, cy+i},
-          SDL_FColor{0.0, 1.0, 0.0}
-        }
-      );
-      points.push_back(
-        SDL_Vertex{
-          SDL_FPoint{cx+x, cy+i},
-          SDL_FColor{0.0, 1.0, 0.0}
-        }
-      );
-      indexes.push_back(0);
-      indexes.push_back(points.size()-1);
-      indexes.push_back(points.size()-3);
-      
-      indexes.push_back(0);
-      indexes.push_back(points.size()-2);
-      indexes.push_back(points.size());
-    }
-
-    points.push_back(
-      SDL_Vertex{
-        SDL_FPoint{cx, cy+r},
-        SDL_FColor{0.0, 1.0, 0.0}
-      }
-    );
-
-    indexes.push_back(0);
-    indexes.push_back(points.size()-3);
-    indexes.push_back(points.size()-1);
-
-    indexes.push_back(0);
-    indexes.push_back(points.size()-1);
-    indexes.push_back(points.size()-2);
-
-    // std::cout << points.size() << " " << indexes.size()<< "\n";
-  }
-
-  void render(SDL_Renderer *renderer)const{
-    SDL_RenderGeometry(renderer, NULL, points.data(), points.size(), indexes.data(), indexes.size());
-  }
-
-};
 
 struct FCircle{
 
@@ -335,5 +245,8 @@ void takeScreenshot(SDL_Renderer* renderer, const char *filename);
 void drawCanvas(SDL_Renderer* renderer);
 void pollEvent(SDL_Event event, ImGuiIO io);
 void drawGui(SDL_Renderer* renderer, ImGuiIO io);
+
+void initCanvas();
+void cleanUpCanvas();
 
 #endif

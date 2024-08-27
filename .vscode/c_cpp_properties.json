@@ -8,7 +8,8 @@
                 "${workspaceFolder}/vendor/SDL/include",
                 "${workspaceFolder}/vendor/SDL3imgui",
                 "${workspaceFolder}/vendor/glm",
-                "${workspaceFolder}/vendor/glad/include"
+                "${workspaceFolder}/vendor/glad/include",
+                "${workspaceFolder}/SDL3canvas/include"
             ],
             "defines": [
                 "_DEBUG",

@@ -9,7 +9,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC GLAD SDL3canvas SDL3::SDL3 SDL3imgu
 target_include_directories(${PROJECT_NAME} PUBLIC GLAD SDL3canvas SDL3::SDL3 SDL3imgui)
 include_directories(${CMAKE_SOURCE_DIR}/vendor/SDL3imgui ${CMAKE_SOURCE_DIR}/vendor/glad/include)
 else()
-add_executable(SDL3engine src/main.cpp)
+add_executable(SDL3engine src/main_sdl3renderer.cpp)
 target_link_libraries(${PROJECT_NAME} PUBLIC SDL3canvas SDL3::SDL3 SDL3imgui glm::glm)
 target_include_directories(${PROJECT_NAME} PUBLIC SDL3canvas SDL3::SDL3 SDL3imgui)
 include_directories(${CMAKE_SOURCE_DIR}/vendor/SDL3imgui)
