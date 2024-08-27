@@ -4,6 +4,10 @@
 #include <vector>
 #include <SDL3/SDL.h>
 
+template <typename T> struct Point{
+  T x, y;
+};
+
 struct GeomCircle{
 
   float cx, cy, r;
